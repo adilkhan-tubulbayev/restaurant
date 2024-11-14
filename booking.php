@@ -26,9 +26,17 @@ if (!isset($_SESSION['username'])) {
         <li><a href="booking.php">Booking</a></li>
         <li><a href="registration.php">Register</a></li>
         <li><a href="authorization.php">Login</a></li>
-        <li><a href="php/logout.php">Logout</a></li>
+        <?php 
+            if (isset($_SESSION['username'])) { 
+                if (isset($_SESSION['is_admin']) && $_SESSION['is_admin']) { 
+                    echo '<li><a href="admin.php">Admin Panel</a></li>';
+                }
+                echo '<li><a href="php/logout.php">Logout</a></li>';
+            }
+        ?>
     </ol>
 </div>
+
 
 <h1>Booking Table</h1>
 <div class="centered-form">

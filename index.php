@@ -22,9 +22,17 @@ session_start();
         <li><a href="booking.php">Booking</a></li>
         <li><a href="registration.php">Register</a></li>
         <li><a href="authorization.php">Login</a></li>
-        <?php if (isset($_SESSION['username'])) { echo '<li><a href="admin.php">Admin Panel</a></li>'; echo '<li><a href="php/logout.php">Logout</a></li>'; } ?>
+        <?php 
+            if (isset($_SESSION['username'])) { 
+                if (isset($_SESSION['is_admin']) && $_SESSION['is_admin']) { 
+                    echo '<li><a href="admin.php">Admin Panel</a></li>';
+                }
+                echo '<li><a href="php/logout.php">Logout</a></li>';
+            }
+        ?>
     </ol>
 </div>
+
 
 <!-- Page Content -->
 <h1>Welcome to King's Landing</h1>

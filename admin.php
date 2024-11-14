@@ -1,8 +1,8 @@
 <?php
 //admin.php
 session_start();
-if (!isset($_SESSION['username'])) {
-    echo "<script>alert('Access denied. Please log in.');</script>";
+if (!isset($_SESSION['username']) || !isset($_SESSION['is_admin']) || !$_SESSION['is_admin']) {
+    echo "<script>alert('Access denied. Please log in as an admin.');</script>";
     echo "<script>document.location.href='authorization.php';</script>";
     exit();
 }
