@@ -27,21 +27,27 @@ if (isset($_POST['bookTable'])) {
     $btime = mysqli_real_escape_string($connect, $_POST['btime']);
     $bphone = mysqli_real_escape_string($connect, $_POST['bphone']);
 
+    // Вставка данных о бронировании
     $sql = "INSERT INTO booking (uid, bname, bguests, btable, btime, bphone) VALUES ('$uid', '$bname', '$bguests', '$btable', '$btime', '$bphone')";
 
     if (mysqli_query($connect, $sql)) {
-        echo "<script>alert('Booking Successful!');</script>";
-        echo "<script>document.location.href='../index.php';</script>";
+        // Получаем ID бронирования для связи с транзакцией
+        $booking_id = mysqli_insert_id($connect);
+        $amount = 100; // Примерная сумма
+        $status = "Pending";
+        
+        // Вставка данных о транзакции
+        $transaction_sql = "INSERT INTO transactions (reservation_id, username, amount, status) VALUES ('$booking_id', '$uid', '$amount', '$status')";
+        if (mysqli_query($connect, $transaction_sql)) {
+            $transaction_id = mysqli_insert_id($connect);
+            echo "<script>alert('Booking Successful! Redirecting to transaction details.');</script>";
+            echo "<script>document.location.href='receipt.php?transaction_id=$transaction_id';</script>";
+        } else {
+            echo "Error: " . $transaction_sql . "<br>" . mysqli_error($connect);
+        }
     } else {
         echo "Error: " . $sql . "<br>" . mysqli_error($connect);
     }
-}
-
-if (isset($_GET['delete_booking'])) {
-    $bid = $_GET['delete_booking'];
-    mysqli_query($connect, "DELETE FROM booking WHERE bid='$bid'");
-    echo "<script>alert('Booking Deleted');</script>";
-    echo "<script>document.location.href='../admin.php';</script>";
 }
 
 mysqli_close($connect);
