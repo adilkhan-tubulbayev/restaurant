@@ -1,9 +1,8 @@
 <?php
+//admin.php
 session_start();
-
-// Проверка, авторизован ли пользователь как администратор
 if (!isset($_SESSION['username'])) {
-    echo "<script>alert('Доступ запрещён. Пожалуйста, авторизуйтесь.');</script>";
+    echo "<script>alert('Access denied. Please log in.');</script>";
     echo "<script>document.location.href='authorization.php';</script>";
     exit();
 }
@@ -15,7 +14,7 @@ $dbname = "restaurant";
 
 $connect = mysqli_connect($host, $user, $pass, $dbname);
 if (!$connect) {
-    die("Что-то пошло не так: " . mysqli_connect_error());
+    die("Something went wrong: " . mysqli_connect_error());
 }
 
 // Обработка формы добавления меню
@@ -30,12 +29,11 @@ if (isset($_POST['add_menu'])) {
         $allowed_types = ['jpg', 'jpeg', 'png', 'gif'];
         
         if (!in_array($file_type, $allowed_types)) {
-            echo "<script>alert('Неверный тип файла. Разрешены JPG, JPEG, PNG и GIF.');</script>";
+            echo "<script>alert('Invalid file type. Only JPG, JPEG, PNG, and GIF are allowed.');</script>";
             echo "<script>document.location.href='admin.php';</script>";
             exit();
         }
 
-        // Генерация уникального имени файла
         $unique_mdishes = uniqid() . '.' . $file_type;
         $target_dir = "uploads/";
         $target_file = $target_dir . $unique_mdishes;
@@ -45,37 +43,33 @@ if (isset($_POST['add_menu'])) {
             $stmt->bind_param("ssss", $unique_mdishes, $mname, $mdescription, $mprice);
 
             if ($stmt->execute()) {
-                echo "<script>alert('Блюдо успешно добавлено!');</script>";
+                echo "<script>alert('Dish added successfully!');</script>";
                 echo "<script>document.location.href='admin.php';</script>";
                 exit();
             } else {
-                echo "Ошибка: " . $stmt->error;
+                echo "Error: " . $stmt->error;
             }
-
             $stmt->close();
         } else {
-            echo "<script>alert('Не удалось загрузить изображение.');</script>";
+            echo "<script>alert('Failed to upload image.');</script>";
         }
     } else {
-        echo "<script>alert('Пожалуйста, выберите изображение для загрузки.');</script>";
+        echo "<script>alert('Please select an image to upload.');</script>";
         echo "<script>document.location.href='admin.php';</script>";
         exit();
     }
 }
 
-// Обработка удаления пункта меню
+// Обработка удаления меню
 if (isset($_GET['delete_menu'])) {
     $mid = mysqli_real_escape_string($connect, $_GET['delete_menu']);
     
-    // Получение имени файла для удаления
     $result = mysqli_query($connect, "SELECT mdishes FROM menu WHERE mid = '$mid'");
     if ($result && mysqli_num_rows($result) == 1) {
         $row = mysqli_fetch_assoc($result);
         $mdishes = $row['mdishes'];
-        $target_dir = "uploads/";
-        $file_path = $target_dir . $mdishes;
+        $file_path = "uploads/" . $mdishes;
 
-        // Удаление файла изображения, если он существует
         if (file_exists($file_path)) {
             unlink($file_path);
         }
@@ -84,13 +78,12 @@ if (isset($_GET['delete_menu'])) {
     $stmt = $connect->prepare("DELETE FROM menu WHERE mid = ?");
     $stmt->bind_param("i", $mid);
     if ($stmt->execute()) {
-        echo "<script>alert('Пункт меню успешно удалён.');</script>";
+        echo "<script>alert('Menu item deleted successfully.');</script>";
         echo "<script>document.location.href='admin.php';</script>";
         exit();
     } else {
-        echo "Ошибка удаления записи: " . $stmt->error;
+        echo "Error deleting record: " . $stmt->error;
     }
-
     $stmt->close();
 }
 
@@ -100,38 +93,53 @@ if (isset($_GET['delete_booking'])) {
     $stmt = $connect->prepare("DELETE FROM booking WHERE bid = ?");
     $stmt->bind_param("i", $bid);
     if ($stmt->execute()) {
-        echo "<script>alert('Бронирование успешно удалено.');</script>";
+        echo "<script>alert('Booking deleted successfully.');</script>";
         echo "<script>document.location.href='admin.php';</script>";
         exit();
     } else {
-        echo "Ошибка удаления бронирования: " . $stmt->error;
+        echo "Error deleting booking: " . $stmt->error;
     }
     $stmt->close();
 }
 ?>
 
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Панель администратора</title>
+    <title>Admin Panel</title>
     <link rel="stylesheet" href="css/main.css">
 </head>
 <body>
-    <h1>Панель администратора</h1>
-    <div id="sidebar">
-        <h2>Управление бронированиями</h2>
-        <table border="1">
+
+<!-- Navigation Bar -->
+<div class="navbar">
+    <ol>
+        <li><a href="index.php">Home</a></li>
+        <li><a href="about.php">About</a></li>
+        <li><a href="menu.php">Menu</a></li>
+        <li><a href="booking.php">Booking</a></li>
+        <li><a href="registration.php">Register</a></li>
+        <li><a href="authorization.php">Login</a></li>
+        <?php if (isset($_SESSION['username'])) { echo '<li><a href="php/logout.php">Logout</a></li>'; } ?>
+    </ol>
+</div>
+
+<h1 class="page-title">Admin Panel</h1>
+
+<div class="admin-panel-container">
+    <!-- Booking Management -->
+    <div class="admin-card">
+        <h2>Booking Management</h2>
+        <table class="admin-table">
             <tr>
-                <th>ID бронирования</th>
-                <th>ID пользователя</th>
-                <th>ID администратора</th>
-                <th>Имя</th>
-                <th>Количество гостей</th>
-                <th>Номер столика</th>
-                <th>Время бронирования</th>
-                <th>Телефон</th>
-                <th>Действия</th>
+                <th>Booking ID</th>
+                <th>User ID</th>
+                <th>Name</th>
+                <th>Guests</th>
+                <th>Table</th>
+                <th>Time</th>
+                <th>Actions</th>
             </tr>
             <?php
             $result = mysqli_query($connect, "SELECT * FROM booking");
@@ -139,70 +147,61 @@ if (isset($_GET['delete_booking'])) {
                 echo "<tr>";
                 echo "<td>" . htmlspecialchars($row['bid']) . "</td>";
                 echo "<td>" . htmlspecialchars($row['uid']) . "</td>";
-                echo "<td>" . htmlspecialchars($row['aid']) . "</td>";
                 echo "<td>" . htmlspecialchars($row['bname']) . "</td>";
                 echo "<td>" . htmlspecialchars($row['bguests']) . "</td>";
                 echo "<td>" . htmlspecialchars($row['btable']) . "</td>";
                 echo "<td>" . htmlspecialchars($row['btime']) . "</td>";
-                echo "<td>" . htmlspecialchars($row['bphone']) . "</td>";
-                echo "<td><a href='edit_booking.php?bid=" . htmlspecialchars($row['bid']) . "'>Редактировать</a> | <a href='admin.php?delete_booking=" . htmlspecialchars($row['bid']) . "'>Удалить</a></td>";
+                echo "<td><a href='edit_booking.php?bid=" . htmlspecialchars($row['bid']) . "'>Edit</a> | <a href='admin.php?delete_booking=" . htmlspecialchars($row['bid']) . "'>Delete</a></td>";
                 echo "</tr>";
             }
             ?>
         </table>
+    </div>
 
-        <h2>Управление меню</h2>
+    <!-- Add New Menu Item -->
+    <div class="admin-card">
+        <h2>Add New Menu Item</h2>
         <form action="admin.php" method="POST" enctype="multipart/form-data">
-            <label for="mdishes">Изображение блюда:</label>
+            <label for="mdishes">Dish Image:</label>
             <input type="file" id="mdishes" name="mdishes" required><br>
-            <label for="mname">Название блюда:</label>
+            <label for="mname">Dish Name:</label>
             <input type="text" id="mname" name="mname" required><br>
-            <label for="mdescription">Описание:</label>
+            <label for="mdescription">Description:</label>
             <textarea id="mdescription" name="mdescription" required></textarea><br>
-            <label for="mprice">Цена:</label>
+            <label for="mprice">Price:</label>
             <input type="text" id="mprice" name="mprice" required><br>
-            <button type="submit" name="add_menu">Добавить в меню</button>
+            <button type="submit" name="add_menu">Add to Menu</button>
         </form>
+    </div>
 
-        <h2>Текущие пункты меню</h2>
-        <table border="1">
+    <!-- Current Menu Items -->
+    <div class="admin-card">
+        <h2>Current Menu Items</h2>
+        <table class="admin-table">
             <tr>
-                <th>ID меню</th>
-                <th>ID пользователя</th>
-                <th>ID администратора</th>
-                <th>Изображение блюда</th>
-                <th>Название блюда</th>
-                <th>Описание</th>
-                <th>Цена</th>
-                <th>Действия</th>
+                <th>Menu ID</th>
+                <th>Dish Image</th>
+                <th>Dish Name</th>
+                <th>Description</th>
+                <th>Price</th>
+                <th>Actions</th>
             </tr>
             <?php
             $result = mysqli_query($connect, "SELECT * FROM menu");
             while ($row = mysqli_fetch_assoc($result)) {
                 echo "<tr>";
                 echo "<td>" . htmlspecialchars($row['mid']) . "</td>";
-                echo "<td>" . htmlspecialchars($row['uid']) . "</td>";
-                echo "<td>" . htmlspecialchars($row['aid']) . "</td>";
-                echo "<td><img src='uploads/" . htmlspecialchars($row['mdishes']) . "' width='100' height='100' alt='Изображение блюда'></td>";
+                echo "<td><img src='uploads/" . htmlspecialchars($row['mdishes']) . "' width='80' height='80'></td>";
                 echo "<td>" . htmlspecialchars($row['mname']) . "</td>";
                 echo "<td>" . htmlspecialchars($row['mdescription']) . "</td>";
-                echo "<td>" . htmlspecialchars($row['mprice']) . "</td>";
-                echo "<td><a href='edit_menu.php?mid=" . htmlspecialchars($row['mid']) . "'>Редактировать</a> | <a href='admin.php?delete_menu=" . htmlspecialchars($row['mid']) . "'>Удалить</a></td>";
+                echo "<td>$" . htmlspecialchars($row['mprice']) . "</td>";
+                echo "<td><a href='edit_menu.php?mid=" . htmlspecialchars($row['mid']) . "'>Edit</a> | <a href='admin.php?delete_menu=" . htmlspecialchars($row['mid']) . "'>Delete</a></td>";
                 echo "</tr>";
             }
             mysqli_close($connect);
             ?>
         </table>
-    
-        <ol>
-            <li><a href="index.php">Главная страница</a></li>
-            <li><a href="about.php">О нас</a></li>
-            <li><a href="menu.php">Меню</a></li>
-            <li><a href="booking.php">Бронирование</a></li>
-            <li><a href="registration.php">Регистрация</a></li>
-            <li><a href="authorization.php">Авторизация</a></li>
-            <li><a href="php/logout.php">Выйти</a></li>
-        </ol>
     </div>
+</div>
 </body>
 </html>
