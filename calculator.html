@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Calculator</title>
+    <script>
+        function calculate() {
+            // Получаем значения из текстовых полей
+            var num1 = document.getElementById("number1").value;
+            var num2 = document.getElementById("number2").value;
+
+            // Конвертируем значения в числа
+            num1 = parseFloat(num1);
+            num2 = parseFloat(num2);
+
+            // Проверяем на деление на ноль
+            if (num2 === 0) {
+                alert("Error: Division by zero!");
+                return;
+            }
+
+            var result = num1 / num2;
+
+            // Выводим результат
+            document.getElementById("result").innerHTML = "Result: " + result;
+        }
+    </script>
+</head>
+<body>
+    <h1>Simple Calculator</h1>
+    <input type="text" id="number1" placeholder="Enter first number">
+    <input type="text" id="number2" placeholder="Enter second number">
+    <button onclick="calculate()">Divide</button>
+    <div id="result"></div>
+</body>
+</html>
