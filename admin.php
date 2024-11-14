@@ -127,7 +127,7 @@ if (isset($_GET['delete_booking'])) {
 
 <h1 class="page-title">Admin Panel</h1>
 
-<div class="admin-panel-container">
+<div class="admin-container">
     <!-- Booking Management -->
     <div class="admin-card">
         <h2>Booking Management</h2>
@@ -139,6 +139,7 @@ if (isset($_GET['delete_booking'])) {
                 <th>Guests</th>
                 <th>Table</th>
                 <th>Time</th>
+                <th>Phone</th>
                 <th>Actions</th>
             </tr>
             <?php
@@ -151,6 +152,7 @@ if (isset($_GET['delete_booking'])) {
                 echo "<td>" . htmlspecialchars($row['bguests']) . "</td>";
                 echo "<td>" . htmlspecialchars($row['btable']) . "</td>";
                 echo "<td>" . htmlspecialchars($row['btime']) . "</td>";
+                echo "<td>" . htmlspecialchars($row['bphone']) . "</td>";
                 echo "<td><a href='edit_booking.php?bid=" . htmlspecialchars($row['bid']) . "'>Edit</a> | <a href='admin.php?delete_booking=" . htmlspecialchars($row['bid']) . "'>Delete</a></td>";
                 echo "</tr>";
             }

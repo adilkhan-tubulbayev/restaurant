@@ -17,6 +17,7 @@ body {
     border: 1px solid #ddd;
     border-radius: 8px;
     background-color: #fff;
+    box-sizing: border-box;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
@@ -87,7 +88,7 @@ select {
     box-sizing: border-box;
 }
 
-button, #btnBooking, #btnreg {
+button, #btnBooking, #btnreg{
     width: 100%;
     background-color: #b76e79;
     color: #fff;
@@ -100,7 +101,7 @@ button, #btnBooking, #btnreg {
     transition: background-color 0.3s ease;
 }
 
-button:hover, #btnBooking:hover, #btnreg:hover {
+button:hover, #btnBooking:hover, #btnreg:hover{
     background-color: #a45259;
 }
 
@@ -117,6 +118,7 @@ button:hover, #btnBooking:hover, #btnreg:hover {
     background-color: #fff;
     border: 1px solid #ddd;
     border-radius: 8px;
+    box-sizing: border-box;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     width: 300px;
     padding: 20px;
@@ -150,30 +152,25 @@ button:hover, #btnBooking:hover, #btnreg:hover {
 
 /* Стилизация админ-панели */
 .admin-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    justify-content: center;
-    padding: 20px;
     max-width: 1200px;
-    margin: auto;
+    margin: 20px auto;
+    padding: 20px;
+    box-sizing: border-box;
 }
 
 .admin-card {
     background-color: #fff;
     border: 1px solid #ddd;
     border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    width: 400px;
-    padding: 20px;
-    text-align: left;
-    margin-bottom: 20px;
     box-sizing: border-box;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    padding: 20px;
 }
 
 .admin-card h2 {
     color: #8d6748;
-    font-size: 1.3em;
+    font-size: 1.5em;
     margin-bottom: 15px;
     text-align: center;
 }
@@ -187,9 +184,10 @@ button:hover, #btnBooking:hover, #btnreg:hover {
 
 .admin-table th, .admin-table td {
     border: 1px solid #ddd;
-    padding: 10px;
+    padding: 8px;
     text-align: center;
     font-size: 0.9em;
+    word-wrap: break-word;
 }
 
 .admin-table th {
@@ -230,6 +228,56 @@ button:hover, #btnBooking:hover, #btnreg:hover {
     background-color: #a45259;
 }
 
+/* About Page Styles */
+.about-container {
+    display: flex;
+    gap: 20px;
+    max-width: 1200px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-sizing: border-box;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    align-items: flex-start;
+}
+
+.about-image {
+    flex: 1;
+    text-align: center;
+}
+
+.restaurant-image {
+    width: 100%;
+    max-width: 600px;
+    border-radius: 8px;
+}
+
+.about-description {
+    flex: 2;
+    padding: 0 20px;
+}
+
+.about-description h1 {
+    color: #b76e79;
+    font-size: 2em;
+    margin-bottom: 20px;
+}
+
+.about-description h2 {
+    color: #8d6748;
+    font-size: 1.5em;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+.about-description p {
+    color: #555;
+    font-size: 1em;
+    line-height: 1.6;
+    margin-bottom: 15px;
+}
+
 /* Стилизация для мобильных устройств */
 @media (max-width: 768px) {
     .navbar {
@@ -243,10 +291,78 @@ button:hover, #btnBooking:hover, #btnreg:hover {
     }
 
     .admin-container {
+        padding: 10px;
+    }
+
+    .admin-card {
+        width: 100%;
+        padding: 15px;
+    }
+
+    .about-container {
         flex-direction: column;
     }
 
-    .menu_item, .admin-card {
-        width: 90%;
+    .about-image, .about-description {
+        width: 100%;
+        text-align: center;
     }
+
+    .about-description {
+        padding: 0;
+    }
+
+    .menu_item, .admin-card {
+        width: 100%;
+    }
+}
+
+/* Стилизация поисковой формы */
+.search-form {
+	width: 100%;
+	text-align: center;
+	margin-bottom: 20px;
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+	padding: 10px;
+	background-color: #fff;
+	border-radius: 8px;
+	display: inline-block;
+}
+
+.search-input {
+	width: 50%;
+	max-width: 500px;
+	padding: 10px;
+	font-size: 16px;
+	border: 1px solid #ccc;
+	border-radius: 4px 0 0 4px;
+	box-sizing: border-box;
+	outline: none;
+	transition: border 0.3s ease;
+}
+
+.search-input:focus {
+	border-color: #b76e79;
+}
+
+.search-button {
+	padding: 10px 20px;
+	font-size: 16px;
+	background-color: #b76e79;
+	color: #fff;
+	border: none;
+	border-radius: 0 4px 4px 0;
+	cursor: pointer;
+	transition: background-color 0.3s ease;
+}
+
+.search-button:hover {
+	background-color: #a45259;
+}
+
+/* Адаптивность для мобильных устройств */
+@media (max-width: 600px) {
+	.search-input {
+			width: 70%;
+	}
 }

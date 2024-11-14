@@ -37,7 +37,9 @@ session_start();
 <!-- Page Content -->
 <h1>Welcome to King's Landing</h1>
 <div class="centered-form">
-    <p>Welcome to King's Landing! Enjoy the finest dining experience in town.</p>
+    <p>Welcome to <b>King's Landing!</b> Enjoy the finest dining experience in town.</p>
+		<br>
+		<img src="img/restaurant-logo.png" alt="logo" class="restaurant-image">
 </div>
 
 </body>
